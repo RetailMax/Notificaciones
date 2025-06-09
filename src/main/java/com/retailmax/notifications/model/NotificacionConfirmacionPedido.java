@@ -4,25 +4,20 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Entity
-@Table(name = "EmailNotificacion")
+@Table(name = "notificacion_confirmacion_pedido")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailNotification {
+public class NotificacionConfirmacionPedido {
 
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    
-    @Column()
-    private String nombre;
-    
-    @Column()
-    private String correo;
-    
-    @Column
-    private String nroOrden;
+    private Long id;
 
+    private String nroOrdenId;
+    private String correoElectronico;
+    
+
+    
 }
