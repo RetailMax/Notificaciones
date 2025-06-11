@@ -22,6 +22,10 @@ public class NotificacionPromocion {
     // Fecha de envío de la notificación
     private LocalDateTime fechaEnvio;
 
+
+    // Tipo de notificación, siempre gmail
+    private String tipo = "gmail";
+
     // Indica si la notificación fue leída
     private boolean leida = false;
 }

@@ -14,9 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class NotificacionPromocionService {
 
     @Autowired
-    private NotificacionPromocionRepository notificacionPromocionRepository;
+    private NotificacionPromocionRepository notificacionPromocionRepository;//logica de negocio
 
-    // Guardar o actualizar
+    // Guardar o actualizar en la BD
     public NotificacionPromocion save(NotificacionPromocion promocion) {
         return notificacionPromocionRepository.save(promocion);
     }

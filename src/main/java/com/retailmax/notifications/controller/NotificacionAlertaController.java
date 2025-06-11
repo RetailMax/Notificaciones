@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-@RestController
-@RequestMapping("/api/v1/NotificacionAlerta")
+@RestController//indica que esta clase es un controlador REST devuelve datos en formato JSON
+@RequestMapping("/api/v1/NotificacionAlerta")// es por donde se empiezan con ruta base
 public class NotificacionAlertaController {
 
     @Autowired
-    private NotificacionAlertaService notificacionAlertaService;
+    private NotificacionAlertaService notificacionAlertaService;//contiene la logica de negocio
 
     
     
@@ -31,7 +31,7 @@ public class NotificacionAlertaController {
     public ResponseEntity<List<NotificacionAlerta>>Listar() {
    List<NotificacionAlerta> notificaciones = notificacionAlertaService.findAll();
     if(notificaciones.isEmpty()) {
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();//devuelve una lista de alertas
    
     }
     return ResponseEntity.ok(notificaciones);
@@ -39,7 +39,7 @@ public class NotificacionAlertaController {
  @PostMapping()
     public ResponseEntity<NotificacionAlerta> crear(@RequestBody NotificacionAlerta notificacionAlerta) {
         NotificacionAlerta guardada = notificacionAlertaService.save(notificacionAlerta);
-        return ResponseEntity.ok(guardada);
+        return ResponseEntity.ok(guardada);//crea una nueva alerta 
     }
 }
 

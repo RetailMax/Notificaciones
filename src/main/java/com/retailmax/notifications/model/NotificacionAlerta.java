@@ -16,23 +16,24 @@ public class NotificacionAlerta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    @Column()
-    String nombre;//nombre de la notificacion o alerta
+     @Column()
+    String nombre; // nombre de la notificación o alerta
 
     @Column()
-    String descripcion; //descripcion de la notificacion o alerta
+    String descripcion; // descripción de la notificación o alerta
 
     @Column()
-    String tipo;//tipo de notificacion o alerta (ejemplo: email, sms)
+    String tipo = "gmail"; // tipo de notificación, siempre gmail
 
     @Column()
-    String estado;//estado de la notificacion o alerta (ejemplo: activa, inactiva)
+    String estado; // estado de la notificación o alerta (ejemplo: activa, inactiva)
 
     @Column()
-    String fechaCreacion;//fecha de creacion de notificacion o alerta
+    String fechaCreacion; // fecha de creación de notificación o alerta
 
     @Column()
-    String fechaModificacion;//fecha de la ultima modificacion de la notificacion o alerta
+    String fechaModificacion; // fecha de la última modificación de la notificación o alerta
 }
+
 
 
