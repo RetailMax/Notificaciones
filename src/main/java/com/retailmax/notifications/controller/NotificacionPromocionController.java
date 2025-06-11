@@ -21,8 +21,8 @@ public class NotificacionPromocionController {
     private NotificacionPromocionService notificacionPromocionService; // <-- Inyecta el servicio correcto
 
     @GetMapping
-    public ResponseEntity<List<NotificacionPromocion>> listar() {
-        List<NotificacionPromocion> notificaciones = notificacionPromocionService.findAll();
+    public ResponseEntity<List<NotificacionPromocion>> listar() {//devuelve de todas las notificaciones de promociones
+        List<NotificacionPromocion> notificaciones = notificacionPromocionService.findAll();//la logica de negocio
         if (notificaciones.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -33,10 +33,10 @@ public class NotificacionPromocionController {
     @PostMapping
     public ResponseEntity<NotificacionPromocion> crear(@RequestBody NotificacionPromocion notificacion) {
         NotificacionPromocion nueva = notificacionPromocionService.save(notificacion);
-        return ResponseEntity.ok(nueva);
+        return ResponseEntity.ok(nueva);//crea una nueva notificacion de promocion
     }
 
-    // Listar notificaciones de promoción por cliente
+    
    
 }
 
