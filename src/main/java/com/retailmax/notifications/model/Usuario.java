@@ -6,18 +6,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "notificacion_actualizacion_estado_pedido")
+@Table(name ="usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificacionActualizacionEstadoPedido {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nroOrdenId;
-    private String estado; // Ej: ENVIADO, EN CAMINO, ENTREGADO
+    private String nroId;
+    private String nombre;
+    private String direccion; 
     private String correoElectronico;
 
 
