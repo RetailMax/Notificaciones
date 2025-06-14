@@ -71,5 +71,15 @@ public class DataLoader implements CommandLineRunner {
         } else {
             System.out.println("ℹ️ Los datos ya existen en la base de datos. Saltando carga de datos de ejemplo.");
         }
+
+        Random random = new Random();
+
+        // Generar 10 promociones de ejemplo
+        for (int i = 0; i < 10; i++) {
+            Promocion promocion = new Promocion();
+            promocion.setTipo("gmail");
+            promocion.setFechaEnvio(LocalDateTime.now().minusDays(random.nextInt(30)));
+            promocion.setResultadoEnvio(random.nextBoolean() ? "Enviado" : "Fallido");
+            promocionRepository.save(promocion);
     }
 }
