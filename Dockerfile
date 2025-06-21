@@ -9,6 +9,6 @@ COPY wallet /app/wallet
 
 ENV TNS_ADMIN=/app/wallet
 
-EXPOSE 8080
+EXPOSE 8082
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
