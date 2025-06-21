@@ -11,5 +11,7 @@ COPY --from=build /app/target/*.jar app.jar
 
 ENV TNS_ADMIN=/app/wallet
 
+
+EXPOSE 8082
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
