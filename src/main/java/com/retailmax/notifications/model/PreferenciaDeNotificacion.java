@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "preferencia_notificacion")
-public class preferenciasDeNotificacion {
+public class PreferenciaDeNotificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "preferencia_seq")
@@ -16,14 +16,14 @@ public class preferenciasDeNotificacion {
     private Long clienteId;
 
     @Column(name = "canal_id", nullable = false)
-    private Long canalId; // se considerara 1=email, 2=SMS
+    private Long canalId;
 
     @Column(name = "habilitado", nullable = false)
     private Boolean habilitado = true;
 
-    public preferenciasDeNotificacion() {}
+    public PreferenciaDeNotificacion() {}
 
-    public preferenciasDeNotificacion(Long clienteId, Long canalId, Boolean habilitado) {
+    public PreferenciaDeNotificacion(Long clienteId, Long canalId, Boolean habilitado) {
         this.clienteId = clienteId;
         this.canalId = canalId;
         this.habilitado = habilitado;
