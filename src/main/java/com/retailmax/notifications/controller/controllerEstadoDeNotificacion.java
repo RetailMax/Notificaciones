@@ -1,4 +1,3 @@
-// controller/controllerEstadoDeNotificacion.java (Java class)
 package com.retailmax.notifications.controller;
 
 import com.retailmax.notifications.model.EstadoDeNotificacion;
