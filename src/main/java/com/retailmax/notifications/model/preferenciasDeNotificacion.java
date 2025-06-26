@@ -16,7 +16,7 @@ public class preferenciasDeNotificacion {
     private Long clienteId;
 
     @Column(name = "canal_id", nullable = false)
-    private Long canalId; // se considerara 1=email, 2=SMS
+    private Long canalId; // se considerará 1=email, 2=SMS
 
     @Column(name = "habilitado", nullable = false)
     private Boolean habilitado = true;
@@ -29,15 +29,35 @@ public class preferenciasDeNotificacion {
         this.habilitado = habilitado;
     }
 
-    public Long getPreferenciaId() { return preferenciaId; }
-    public void setPreferenciaId(Long preferenciaId) { this.preferenciaId = preferenciaId; }
+    public Long getPreferenciaId() {
+        return preferenciaId;
+    }
 
-    public Long getClienteId() { return clienteId; }
-    public void setClienteId(Long clienteId) { this.clienteId = clienteId; }
+    public void setPreferenciaId(Long preferenciaId) {
+        this.preferenciaId = preferenciaId;
+    }
 
-    public Long getCanalId() { return canalId; }
-    public void setCanalId(Long canalId) { this.canalId = canalId; }
+    public Long getClienteId() {
+        return clienteId;
+    }
 
-    public Boolean getHabilitado() { return habilitado; }
-    public void setHabilitado(Boolean habilitado) { this.habilitado = habilitado; }
+    public void setClienteId(Long clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public Long getCanalId() {
+        return canalId;
+    }
+
+    public void setCanalId(Long canalId) {
+        this.canalId = canalId;
+    }
+
+    public Boolean getHabilitado() {
+        return habilitado;
+    }
+
+    public void setHabilitado(Boolean habilitado) {
+        this.habilitado = habilitado;
+    }
 }

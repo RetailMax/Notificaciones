@@ -1,35 +1,36 @@
 package com.retailmax.notifications.service;
 
-import com.retailmax.notifications.model.preferenciasDeNotificacion;
-import com.retailmax.notifications.repository.repositorypreferenciasDeNotificacion;
+import com.retailmax.notifications.model.PreferenciasDeNotificacion;
+import com.retailmax.notifications.repository.RepositoryPreferenciasDeNotificacion;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
-public class servicePreferenciasDeNotificacion {
+public class ServicePreferenciasDeNotificacion {
 
-    private final repositorypreferenciasDeNotificacion repo;
+    private final RepositoryPreferenciasDeNotificacion repo;
 
-    public servicePreferenciasDeNotificacion(repositorypreferenciasDeNotificacion repo) {
+    public ServicePreferenciasDeNotificacion(RepositoryPreferenciasDeNotificacion repo) {
         this.repo = repo;
     }
 
-    public List<preferenciasDeNotificacion> obtenerPorCliente(Long clienteId) {
+    public List<PreferenciasDeNotificacion> obtenerPorCliente(Long clienteId) {
         return repo.findByClienteId(clienteId);
     }
 
-    public preferenciasDeNotificacion guardar(preferenciasDeNotificacion pref) {
+    public PreferenciasDeNotificacion guardar(PreferenciasDeNotificacion pref) {
         return repo.save(pref);
     }
 
-    public void actualizarPreferencias(Long clienteId, List<preferenciasDeNotificacion> nuevas) {
-        List<preferenciasDeNotificacion> actuales = repo.findByClienteId(clienteId);
+    public void actualizarPreferencias(Long clienteId, List<PreferenciasDeNotificacion> nuevas) {
+        List<PreferenciasDeNotificacion> actuales = repo.findByClienteId(clienteId);
         repo.deleteAll(actuales);
         repo.saveAll(nuevas);
     }
 
     public void crearPorDefecto(Long clienteId) {
-        preferenciasDeNotificacion pref = new preferenciasDeNotificacion(clienteId, 1L, true); // 1 = email
+        PreferenciasDeNotificacion pref = new PreferenciasDeNotificacion(clienteId, 1L, true); // 1 = email
         repo.save(pref);
     }
 }
