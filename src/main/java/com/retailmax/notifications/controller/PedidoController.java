@@ -15,6 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.retailmax.notifications.model.Pedido;
 import com.retailmax.notifications.service.PedidoService;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +27,7 @@ import java.util.Optional;
 @RequestMapping("/api/v2/pedido")
 @CrossOrigin(origins = "*")
 @Tag(name = "Pedidos", description = "API para gestión de pedidos")
+@ControllerAdvice
 public class PedidoController {
 
     private static final Logger logger = LoggerFactory.getLogger(PedidoController.class);
@@ -130,5 +135,20 @@ public class PedidoController {
         pedidoService.deleteById(id);
         logger.info("Pedido eliminado exitosamente con ID: {}", id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Datos de entrada inválidos");
+    }
+    
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleJsonException(HttpMessageNotReadableException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Formato JSON inválido");
+    }
+    
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
     }
 }
