@@ -4,6 +4,7 @@ import com.retailmax.notifications.model.PreferenciaDeNotificacion;
 import com.retailmax.notifications.repository.PreferenciaDeNotificacionRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PreferenciaDeNotificacionService {
@@ -18,13 +19,16 @@ public class PreferenciaDeNotificacionService {
         return repo.findByClienteId(clienteId);
     }
 
+    public Optional<PreferenciaDeNotificacion> obtenerPorClienteYCanal(Long clienteId, Long canalId) {
+        return repo.findByClienteIdAndCanalId(clienteId, canalId);
+    }
+
     public PreferenciaDeNotificacion guardar(PreferenciaDeNotificacion pref) {
         return repo.save(pref);
     }
 
     public void actualizarPreferencias(Long clienteId, List<PreferenciaDeNotificacion> nuevas) {
-        List<PreferenciaDeNotificacion> actuales = repo.findByClienteId(clienteId);
-        repo.deleteAll(actuales);
+        repo.deleteByClienteId(clienteId);
         repo.saveAll(nuevas);
     }
 
