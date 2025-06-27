@@ -1,17 +1,17 @@
-FROM maven:3.9.6-eclipse-temurin-21 as build
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
-
 FROM openjdk:21-jdk-slim
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-RUN 
-COPY --from=build /app/target/*.jar app.jar
+
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+
+COPY wallet /app/wallet
 
 ENV TNS_ADMIN=/app/wallet
+ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
-
-EXPOSE 8082
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

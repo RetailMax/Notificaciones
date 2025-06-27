@@ -2,60 +2,74 @@ package com.retailmax.notifications;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import com.retailmax.notifications.model.Pedido;
-import com.retailmax.notifications.model.EstadoPedido;
+import com.retailmax.notifications.model.Usuario;
 import com.retailmax.notifications.repository.PedidoRepository;
+import com.retailmax.notifications.repository.UsuarioRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-
 @Profile("dev")
 @Component
 public class DataLoader implements CommandLineRunner {
-    
+
     @Autowired
     private PedidoRepository pedidoRepository;
-    
-    public DataLoader(PedidoRepository pedidoRepository) {
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    // Métodos para inyección en pruebas
+    void setPedidoRepository(PedidoRepository pedidoRepository) {
         this.pedidoRepository = pedidoRepository;
+    }
+    void setUsuarioRepository(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        
-        Random random = new Random();
+        // Crear un usuario de ejemplo si no existe
+        String nroIdEjemplo = "USR-0001";
+        Usuario usuario = usuarioRepository.findByNroId(nroIdEjemplo)
+                .orElseGet(() -> {
+                    Usuario nuevo = new Usuario();
+                    nuevo.setNroId(nroIdEjemplo);
+                    nuevo.setNombre("Usuario Ejemplo");
+                    nuevo.setCorreoElectronico("ejemplo@correo.com");
+                    nuevo.setEstado("ACTIVO");
+                    return usuarioRepository.save(nuevo);
+                });
 
-        // Generar 15 pedidos de ejemplo
-        for (int i = 0; i < 15; i++) {
-            Pedido pedido = new Pedido();
-            
-            // Cliente ID aleatorio entre 1 y 100
-            pedido.setClienteId((long) (random.nextInt(100) + 1));
-            
-            // Fecha de pedido aleatoria en los últimos 30 días
-            LocalDateTime fechaPedido = LocalDateTime.now().minusDays(random.nextInt(30));
-            pedido.setFechaPedido(fechaPedido);
-            
-            // Estado aleatorio
-            EstadoPedido[] estados = EstadoPedido.values();
-            pedido.setEstadoPedido(estados[random.nextInt(estados.length)]);
-            
-            // Total aleatorio entre 10.00 y 1000.00
-            BigDecimal total = new BigDecimal(random.nextDouble() * 990 + 10).setScale(2, BigDecimal.ROUND_HALF_UP);
-            pedido.setTotal(total);
-            
-            // Fecha de entrega estimada (entre 1 y 14 días después del pedido)
-            LocalDateTime fechaEntregaEstimada = fechaPedido.plusDays(random.nextInt(14) + 1);
-            pedido.setFechaEntregaEstimada(fechaEntregaEstimada);
-            
-            pedidoRepository.save(pedido);
+        Random random = new Random();
+        Pedido.EstadoPedido[] estados = Pedido.EstadoPedido.values();
+
+        // Verificar si ya existen pedidos para evitar duplicados
+        long count = pedidoRepository.count();
+        if (count == 0) {
+            // Solo crear pedidos si no existen
+            for (int i = 0; i < 15; i++) {
+                String codigoId = "PED-" + (1000 + i);
+                // Verificar si el pedido ya existe
+                boolean existe = pedidoRepository.findAll().stream()
+                        .anyMatch(p -> codigoId.equals(p.getCodigoId()));
+                if (!existe) {
+                    Pedido pedido = new Pedido();
+                    pedido.setCodigoId(codigoId);
+                    pedido.setFechaPedido(LocalDateTime.now().minusDays(random.nextInt(30)));
+                    pedido.setEstadoPedido(estados[random.nextInt(estados.length)]);
+                    pedido.setMontoTotal(BigDecimal.valueOf(10 + random.nextDouble() * 990).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    pedido.setFechaEntrega(LocalDateTime.now().plusDays(random.nextInt(14) + 1));
+                    pedido.setUsuario(usuario);
+                    pedidoRepository.save(pedido);
+                }
+            }
+            System.out.println("✅ Datos de pedidos y usuario de ejemplo cargados exitosamente en modo desarrollo");
+        } else {
+            System.out.println("ℹ️ Los datos ya existen en la base de datos. Saltando carga de datos de ejemplo.");
         }
-        
-        System.out.println("✅ Datos de pedidos cargados exitosamente en modo desarrollo");
     }
-} 
+}
