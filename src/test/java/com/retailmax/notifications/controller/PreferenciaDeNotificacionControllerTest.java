@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,15 +20,16 @@ import static org.hamcrest.Matchers.*;
 
 @WebMvcTest(
     controllers = PreferenciaDeNotificacionController.class,
-    excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        com.retailmax.notifications.controller.PedidoController.class
-    })
+    excludeFilters = @ComponentScan.Filter(
+        type = FilterType.ASSIGNABLE_TYPE,
+        classes = { com.retailmax.notifications.controller.PedidoController.class }
+    )
 )
 class PreferenciaDeNotificacionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
+//dd
     @MockBean
     private PreferenciaDeNotificacionService service;
 
@@ -43,10 +45,11 @@ class PreferenciaDeNotificacionControllerTest {
             .andExpect(jsonPath("$._embedded.preferenciaDeNotificacionList[0]._links.self.href", containsString("/api/preferencias/1")))
             .andExpect(jsonPath("$._links.self.href", containsString("/api/preferencias/1")));
     }
-// testing
+
     @Test
     void updatePreferencias_llamaAlServicio() throws Exception {
         String body = "[{\"clienteId\":1,\"canalId\":1,\"habilitado\":true}]";
+
         mockMvc.perform(put("/api/preferencias/1")
                 .contentType("application/json")
                 .content(body))
@@ -58,6 +61,7 @@ class PreferenciaDeNotificacionControllerTest {
     @Test
     void updatePreferencias_agregaPorDefectoSiNingunaHabilitada() throws Exception {
         String body = "[{\"clienteId\":1,\"canalId\":2,\"habilitado\":false}]";
+
         mockMvc.perform(put("/api/preferencias/1")
                 .contentType("application/json")
                 .content(body))
