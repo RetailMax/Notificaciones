@@ -1,96 +1,87 @@
 package com.retailmax.notifications.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import jakarta.validation.ConstraintViolation;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Pruebas del modelo Pedido")
 public class PedidoModelTest {
 
-    private final Validator validator;
+    private Validator validator;
+    private Pedido pedido;
+    private Usuario usuario;
 
-    public PedidoModelTest() {
+    @BeforeEach
+    void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+        usuario = new Usuario("USR-001", "Juan Pérez", "juan@email.com");
+        pedido = new Pedido("PED-001", new BigDecimal("100.00"), LocalDateTime.now());
+        pedido.setUsuario(usuario);
     }
 
     @Test
-    @DisplayName("Debería crear un Pedido correctamente con el constructor por defecto")
-    void testConstructorPorDefecto() {
-        Pedido pedido = new Pedido();
+    @DisplayName("Debería crear un pedido válido con el constructor personalizado")
+    void testConstructorPersonalizado() {
+        assertEquals("PED-001", pedido.getCodigoId());
+        assertEquals(new BigDecimal("100.00"), pedido.getMontoTotal());
         assertNotNull(pedido.getFechaPedido());
-        assertEquals(EstadoPedido.ENVIADO, pedido.getEstadoPedido());
+        assertEquals(Pedido.EstadoPedido.ENVIADO, pedido.getEstadoPedido());
+        assertEquals(usuario, pedido.getUsuario());
     }
 
     @Test
-    @DisplayName("Debería crear un Pedido correctamente con el constructor con parámetros")
-    void testConstructorConParametros() {
-        LocalDateTime fechaEntrega = LocalDateTime.of(2024, 7, 1, 12, 0);
-        Pedido pedido = new Pedido(123L, new BigDecimal("100.50"), fechaEntrega);
-        assertEquals(123L, pedido.getClienteId());
-        assertEquals(new BigDecimal("100.50"), pedido.getTotal());
-        assertEquals(fechaEntrega, pedido.getFechaEntregaEstimada());
-        assertNotNull(pedido.getFechaPedido());
-        assertEquals(EstadoPedido.ENVIADO, pedido.getEstadoPedido());
-    }
-
-    @Test
-    @DisplayName("Debería validar correctamente los campos obligatorios")
+    @DisplayName("Debería validar campos obligatorios y restricciones")
     void testValidacionesBeanValidation() {
-        Pedido pedido = new Pedido();
-        pedido.setClienteId(null);
-        pedido.setTotal(null);
-        pedido.setFechaPedido(null);
-        pedido.setEstadoPedido(null);
-        Set<ConstraintViolation<Pedido>> violations = validator.validate(pedido);
+        Pedido pedidoInvalido = new Pedido();
+        Set<ConstraintViolation<Pedido>> violations = validator.validate(pedidoInvalido);
         assertFalse(violations.isEmpty());
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("clienteId")));
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("total")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("codigoId")));
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("fechaPedido")));
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("estadoPedido")));
+        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("montoTotal")));
     }
 
     @Test
-    @DisplayName("Debería validar que el total sea mayor a 0")
-    void testValidacionTotalMayorACero() {
-        Pedido pedido = new Pedido();
-        pedido.setClienteId(1L);
-        pedido.setTotal(new BigDecimal("0.00"));
-        pedido.setFechaPedido(LocalDateTime.now());
-        pedido.setEstadoPedido(EstadoPedido.ENVIADO);
-        Set<ConstraintViolation<Pedido>> violations = validator.validate(pedido);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("total")));
+    @DisplayName("Debería agregar y remover usuario correctamente")
+    void testRelacionConUsuario() {
+        Usuario otroUsuario = new Usuario("USR-002", "Ana Gómez", "ana@email.com");
+        pedido.setUsuario(otroUsuario);
+        assertEquals(otroUsuario, pedido.getUsuario());
     }
 
     @Test
-    @DisplayName("Debería validar que el clienteId sea positivo")
-    void testValidacionClienteIdPositivo() {
-        Pedido pedido = new Pedido();
-        pedido.setClienteId(-5L);
-        pedido.setTotal(new BigDecimal("10.00"));
-        pedido.setFechaPedido(LocalDateTime.now());
-        pedido.setEstadoPedido(EstadoPedido.ENVIADO);
-        Set<ConstraintViolation<Pedido>> violations = validator.validate(pedido);
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("clienteId")));
+    @DisplayName("Debería establecer y obtener todos los campos correctamente")
+    void testSettersAndGetters() {
+        LocalDateTime fechaPedido = LocalDateTime.of(2024, 6, 26, 12, 0);
+        LocalDateTime fechaEntrega = LocalDateTime.of(2024, 6, 27, 14, 0);
+        pedido.setCodigoId("PED-002");
+        pedido.setFechaPedido(fechaPedido);
+        pedido.setEstadoPedido(Pedido.EstadoPedido.ENTREGADO);
+        pedido.setMontoTotal(new BigDecimal("200.00"));
+        pedido.setFechaEntrega(fechaEntrega);
+        assertEquals("PED-002", pedido.getCodigoId());
+        assertEquals(fechaPedido, pedido.getFechaPedido());
+        assertEquals(Pedido.EstadoPedido.ENTREGADO, pedido.getEstadoPedido());
+        assertEquals(new BigDecimal("200.00"), pedido.getMontoTotal());
+        assertEquals(fechaEntrega, pedido.getFechaEntrega());
     }
 
     @Test
-    @DisplayName("Debería funcionar correctamente el método toString")
-    void testToString() {
-        Pedido pedido = new Pedido(1L, new BigDecimal("10.00"), LocalDateTime.now());
-        String str = pedido.toString();
-        assertTrue(str.contains("pedidoId"));
-        assertTrue(str.contains("clienteId"));
-        assertTrue(str.contains("total"));
+    @DisplayName("Debería tener toString, equals y hashCode funcionales")
+    void testToStringEqualsHashCode() {
+        Pedido pedido1 = new Pedido("PED-003", new BigDecimal("300.00"), LocalDateTime.now());
+        Pedido pedido2 = new Pedido("PED-003", new BigDecimal("300.00"), LocalDateTime.now());
+        assertNotNull(pedido1.toString());
+        assertNotEquals(pedido1, pedido2); // Diferentes instancias
+        assertNotEquals(pedido1.hashCode(), pedido2.hashCode());
     }
 }

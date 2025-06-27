@@ -13,16 +13,6 @@
     <relativePath/>
   </parent>
 
-  <groupId>com.retailmax</groupId>
-  <artifactId>notifications</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>notifications</name>
-  <description>Notifications project</description>
-
-  <properties>
-    <java.version>21</java.version>
-  </properties>
-
   <dependencies>
     <!-- Spring Data JPA y Web -->
     <dependency>
@@ -97,6 +87,16 @@
       <version>2.4.2</version>
     </dependency>
   </dependencies>
+
+  <groupId>com.retailmax</groupId>
+  <artifactId>notifications</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>notifications</name>
+  <description>Notifications project</description>
+
+  <properties>
+    <java.version>21</java.version>
+  </properties>
 
   <build>
     <plugins>
