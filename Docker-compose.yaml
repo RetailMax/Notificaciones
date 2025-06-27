@@ -18,7 +18,7 @@ services:
 
   ordenes:
     build:
-      context: ../Ordenespeeo
+      context: ../Ordenes
     ports:
       - "8083:8080"
     networks:
