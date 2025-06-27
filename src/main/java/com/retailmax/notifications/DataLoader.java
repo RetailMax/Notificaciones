@@ -9,7 +9,8 @@ import com.retailmax.notifications.model.Usuario;
 import com.retailmax.notifications.repository.PedidoRepository;
 import com.retailmax.notifications.repository.UsuarioRepository;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Profile("dev")
@@ -44,7 +45,7 @@ public class DataLoader implements CommandLineRunner {
                 });
 
         Random random = new Random();
-        String[] estados = {"PENDIENTE", "ENVIADO", "ENTREGADO", "CANCELADO"};
+        Pedido.EstadoPedido[] estados = Pedido.EstadoPedido.values();
 
         // Verificar si ya existen pedidos para evitar duplicados
         long count = pedidoRepository.count();
@@ -52,15 +53,16 @@ public class DataLoader implements CommandLineRunner {
             // Solo crear pedidos si no existen
             for (int i = 0; i < 15; i++) {
                 String codigoId = "PED-" + (1000 + i);
-                
                 // Verificar si el pedido ya existe
-                if (!pedidoRepository.findByCodigoId(codigoId).isPresent()) {
+                boolean existe = pedidoRepository.findAll().stream()
+                        .anyMatch(p -> codigoId.equals(p.getCodigoId()));
+                if (!existe) {
                     Pedido pedido = new Pedido();
                     pedido.setCodigoId(codigoId);
-                    pedido.setFechaPedido(new Date(System.currentTimeMillis() - random.nextInt(30) * 86400000L));
+                    pedido.setFechaPedido(LocalDateTime.now().minusDays(random.nextInt(30)));
                     pedido.setEstadoPedido(estados[random.nextInt(estados.length)]);
-                    pedido.setMontoTotal(String.format("%.2f", 10 + random.nextDouble() * 990));
-                    pedido.setFechaEntrega(new Date(System.currentTimeMillis() + (random.nextInt(14) + 1) * 86400000L));
+                    pedido.setMontoTotal(BigDecimal.valueOf(10 + random.nextDouble() * 990).setScale(2, BigDecimal.ROUND_HALF_UP));
+                    pedido.setFechaEntrega(LocalDateTime.now().plusDays(random.nextInt(14) + 1));
                     pedido.setUsuario(usuario);
                     pedidoRepository.save(pedido);
                 }

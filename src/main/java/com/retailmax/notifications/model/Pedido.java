@@ -5,10 +5,11 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "pedido")
+@Table(name = "pedidos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,28 +29,42 @@ public class Pedido {
     private String codigoId;
 
     /** Fecha del pedido */
-    @NotNull(message = "La fecha del pedido es obligatoria")
-    @Column(name = "fecha_pedido")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaPedido;
+    @NotNull(message = "La fecha del pedido es requerida")
+    @Column(name = "fecha_pedido", nullable = false)
+    private LocalDateTime fechaPedido = LocalDateTime.now();
 
     /** Estado del pedido */
-    @NotBlank(message = "El estado del pedido es obligatorio")
-    @Column(name = "estado_pedido", length = 20)
-    private String estadoPedido;
+    @NotNull(message = "El estado del pedido es requerido")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_pedido", nullable = false)
+    private EstadoPedido estadoPedido = EstadoPedido.ENVIADO;
 
     /** Monto total del pedido */
-    @NotBlank(message = "El monto total es obligatorio")
-    @Column(name = "monto_total")
-    private String montoTotal;
+    @NotNull(message = "El monto total es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El monto debe ser mayor a 0")
+    @Column(name = "monto_total", nullable = false)
+    private BigDecimal montoTotal;
 
     /** Fecha estimada de entrega */
     @Column(name = "fecha_entrega")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaEntrega;
+    private LocalDateTime fechaEntrega;
 
     /** Usuario asociado al pedido */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
+
+    // Constructor parcial para tests o lógica específica
+    public Pedido(String codigoId, BigDecimal montoTotal, LocalDateTime fechaEntrega) {
+        this.codigoId = codigoId;
+        this.montoTotal = montoTotal;
+        this.fechaEntrega = fechaEntrega;
+        this.fechaPedido = LocalDateTime.now();
+        this.estadoPedido = EstadoPedido.ENVIADO;
+    }
+
+    // Enum para el estado del pedido
+    public enum EstadoPedido {
+        ENVIADO, ENTREGADO, CANCELADO
+    }
 }

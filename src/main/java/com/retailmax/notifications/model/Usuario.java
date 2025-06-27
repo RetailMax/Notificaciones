@@ -14,9 +14,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-/**
- * Modelo de Usuario del sistema RetailMax
- */
 @Schema(description = "Modelo de Usuario del sistema RetailMax")
 public class Usuario {
 
@@ -64,13 +61,12 @@ public class Usuario {
         this.correoElectronico = correoElectronico;
     }
 
-    // Método helper para agregar pedidos
+    // Métodos helper para mantener la relación bidireccional
     public void addPedido(Pedido pedido) {
         pedidos.add(pedido);
         pedido.setUsuario(this);
     }
 
-    // Método helper para remover pedidos
     public void removePedido(Pedido pedido) {
         pedidos.remove(pedido);
         pedido.setUsuario(null);
