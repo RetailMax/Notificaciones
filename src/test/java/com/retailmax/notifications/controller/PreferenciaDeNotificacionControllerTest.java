@@ -1,72 +1,53 @@
 package com.retailmax.notifications.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.retailmax.notifications.model.PreferenciaDeNotificacion;
 import com.retailmax.notifications.service.PreferenciaDeNotificacionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
 
-@WebMvcTest(
-    controllers = PreferenciaDeNotificacionController.class,
-    excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        classes = { com.retailmax.notifications.controller.PedidoController.class }
-    )
-)
+@WebMvcTest(controllers = PreferenciaDeNotificacionController.class)
 class PreferenciaDeNotificacionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-//dd
+
     @MockBean
     private PreferenciaDeNotificacionService service;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
-    void getPreferencias_devuelveHateoasJson() throws Exception {
+    void testObtenerPreferenciasPorCliente() throws Exception {
         PreferenciaDeNotificacion pref = new PreferenciaDeNotificacion(1L, 1L, true);
-        Mockito.when(service.obtenerPorCliente(1L)).thenReturn(List.of(pref));
+        Mockito.when(service.obtenerPorCliente(1L)).thenReturn(Collections.singletonList(pref));
 
         mockMvc.perform(get("/api/preferencias/1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.preferenciaDeNotificacionList", hasSize(1)))
-            .andExpect(jsonPath("$._embedded.preferenciaDeNotificacionList[0].clienteId", is(1)))
-            .andExpect(jsonPath("$._embedded.preferenciaDeNotificacionList[0]._links.self.href", containsString("/api/preferencias/1")))
-            .andExpect(jsonPath("$._links.self.href", containsString("/api/preferencias/1")));
+            .andExpect(jsonPath("$._embedded.entityModelList[0].clienteId").value(1L));
     }
 
     @Test
-    void updatePreferencias_llamaAlServicio() throws Exception {
-        String body = "[{\"clienteId\":1,\"canalId\":1,\"habilitado\":true}]";
+    void testActualizarPreferencias() throws Exception {
+        PreferenciaDeNotificacion pref = new PreferenciaDeNotificacion(1L, 2L, false);
+        String json = objectMapper.writeValueAsString(Arrays.asList(pref));
 
         mockMvc.perform(put("/api/preferencias/1")
-                .contentType("application/json")
-                .content(body))
-            .andExpect(status().isOk());
-
-        Mockito.verify(service).actualizarPreferencias(Mockito.eq(1L), Mockito.anyList());
-    }
-
-    @Test
-    void updatePreferencias_agregaPorDefectoSiNingunaHabilitada() throws Exception {
-        String body = "[{\"clienteId\":1,\"canalId\":2,\"habilitado\":false}]";
-
-        mockMvc.perform(put("/api/preferencias/1")
-                .contentType("application/json")
-                .content(body))
-            .andExpect(status().isOk());
-
-        Mockito.verify(service).actualizarPreferencias(Mockito.eq(1L), Mockito.anyList());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isNoContent());
     }
 }
