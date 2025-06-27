@@ -1,4 +1,4 @@
-package com.retailmax.notifications.config;
+package com.retailmax.notificaciones.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

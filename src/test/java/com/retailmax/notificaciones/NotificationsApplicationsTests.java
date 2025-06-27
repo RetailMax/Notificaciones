@@ -1,10 +1,10 @@
-package com.retailmax.notifications;
 
+package com.retailmax.notificaciones;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class NotificationsApplicationTests {
+class NotificationsApplicationsTests {
 
 	@Test
 	void contextLoads() {

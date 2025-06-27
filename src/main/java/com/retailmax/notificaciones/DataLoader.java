@@ -1,12 +1,11 @@
-package com.retailmax.notifications;
+package com.retailmax.notificaciones;
 
 import org.springframework.context.annotation.Profile;
 
 import org.springframework.stereotype.Component;
 
-import com.retailmax.notifications.model.Promocion;
-import com.retailmax.notifications.repository.PromocionRepository;
-
+import com.retailmax.notificaciones.model.Promocion;
+import com.retailmax.notificaciones.repository.PromocionRepository;
 
 import java.time.LocalDateTime;
 import java.util.Random;
