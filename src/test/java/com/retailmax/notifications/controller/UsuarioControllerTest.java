@@ -30,6 +30,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.hateoas.EntityModel;
 
 
+
 @WebMvcTest(UsuarioController.class)
 @ExtendWith(SpringExtension.class)
 @DisplayName("Pruebas del Controlador de Usuarios")
@@ -157,11 +158,11 @@ public class UsuarioControllerTest {
         nuevoUsuario.setEstado("ACTIVO");
 
         when(usuarioService.save(any(Usuario.class))).thenThrow(new DuplicateKeyException("Duplicado"));
-        when(assembler.toModelForCreation(any(Usuario.class))).thenReturn(EntityModel.of(nuevoUsuario));
+        
         mockMvc.perform(post("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(nuevoUsuario)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict()); // DuplicateKeyException debería retornar 409 Conflict
         verify(usuarioService, times(1)).save(any(Usuario.class));
     }
 
@@ -287,6 +288,7 @@ public class UsuarioControllerTest {
         when(usuarioService.findById(1L)).thenThrow(new RuntimeException("Error interno"));
         mockMvc.perform(get("/api/v1/usuarios/1"))
                 .andExpect(status().isInternalServerError());
+        verify(usuarioService, times(1)).findById(1L);
     }
 
     @Test
@@ -297,5 +299,51 @@ public class UsuarioControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonInvalido))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Debería retornar 400 al crear usuario con campos nulos o vacíos")
+    void testCrearUsuarioCamposNulos() throws Exception {
+        Usuario invalido = new Usuario();
+        mockMvc.perform(post("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalido)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Debería retornar 400 al actualizar usuario con campos nulos o vacíos")
+    void testActualizarUsuarioCamposNulos() throws Exception {
+        Usuario invalido = new Usuario();
+        mockMvc.perform(put("/api/v1/usuarios/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalido)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Debería retornar 500 ante error inesperado en el servicio")
+    void testErrorInternoEnServicio() throws Exception {
+        when(usuarioService.findById(1L)).thenThrow(new RuntimeException("Error inesperado"));
+        mockMvc.perform(get("/api/v1/usuarios/1"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @DisplayName("Debería retornar 400 al crear usuario con body nulo")
+    void testCrearUsuarioBodyNulo() throws Exception {
+        mockMvc.perform(post("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("")
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Debería retornar 400 al cambiar estado con estado nulo")
+    void testCambiarEstadoNulo() throws Exception {
+        when(usuarioService.cambiarEstado(eq(1L), isNull())).thenThrow(new IllegalArgumentException("Estado nulo"));
+        mockMvc.perform(patch("/api/v1/usuarios/1/estado")
+                .param("estado", "")
+        ).andExpect(status().isBadRequest());
     }
 }

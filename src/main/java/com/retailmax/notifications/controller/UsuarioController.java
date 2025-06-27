@@ -146,6 +146,9 @@ public class UsuarioController {
             @PathVariable Long id,
             @Parameter(description = "Nuevo estado del usuario", required = true, example = "ACTIVO")
             @RequestParam String estado) {
+        if (estado == null || estado.trim().isEmpty()) {
+            throw new IllegalArgumentException("El estado no puede ser nulo o vacío");
+        }
         try {
             Usuario usuario = usuarioService.cambiarEstado(id, estado);
             return ResponseEntity.ok(assembler.toModelForUpdate(usuario));

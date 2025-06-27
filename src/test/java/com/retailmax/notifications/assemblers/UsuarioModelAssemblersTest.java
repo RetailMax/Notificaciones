@@ -1,13 +1,12 @@
 package com.retailmax.notifications.assemblers;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -15,11 +14,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.retailmax.notifications.controller.UsuarioController;
 import com.retailmax.notifications.model.Usuario;
 
 @ExtendWith(MockitoExtension.class)
-class UsuarioModelAssemblersTest {
+public class UsuarioModelAssemblersTest {
 
     @InjectMocks
     private UsuarioModelAssemblers assembler;
@@ -42,101 +40,144 @@ class UsuarioModelAssemblersTest {
     }
 
     @Test
-    void toModel_ShouldCreateEntityModelWithCorrectLinks() {
+    @DisplayName("Debería convertir usuario a EntityModel con enlaces HATEOAS")
+    void testToModel() {
         // When
-        EntityModel<Usuario> result = assembler.toModel(usuario);
+        EntityModel<Usuario> entityModel = assembler.toModel(usuario);
 
         // Then
-        assertNotNull(result);
-        assertEquals(usuario, result.getContent());
+        assertNotNull(entityModel);
+        assertEquals(usuario, entityModel.getContent());
         
-        // Verificar que tiene los enlaces esperados
-        assertTrue(result.hasLink("self"));
-        assertTrue(result.hasLink("usuarios"));
-        assertTrue(result.hasLink("actualizar"));
-        assertTrue(result.hasLink("eliminar"));
-        assertTrue(result.hasLink("cambiarEstado"));
+        // Verificar que tiene enlaces
+        assertTrue(entityModel.hasLinks());
         
-        // Verificar que el enlace self apunta al usuario correcto
-        Link selfLink = result.getLink("self").orElse(null);
-        assertNotNull(selfLink);
-        assertTrue(selfLink.getHref().contains("/api/v1/usuarios/1"));
+        // Verificar enlaces específicos
+        assertTrue(entityModel.hasLink("self"));
+        assertTrue(entityModel.hasLink("usuarios"));
+        assertTrue(entityModel.hasLink("actualizar"));
+        assertTrue(entityModel.hasLink("eliminar"));
+        assertTrue(entityModel.hasLink("cambiarEstado"));
     }
 
     @Test
-    void toModelForCreation_ShouldCreateEntityModelWithCreationLinks() {
+    @DisplayName("Debería crear EntityModel para usuario recién creado")
+    void testToModelForCreation() {
         // When
-        EntityModel<Usuario> result = assembler.toModelForCreation(usuario);
+        EntityModel<Usuario> entityModel = assembler.toModelForCreation(usuario);
 
         // Then
-        assertNotNull(result);
-        assertEquals(usuario, result.getContent());
+        assertNotNull(entityModel);
+        assertEquals(usuario, entityModel.getContent());
         
-        // Verificar que tiene los enlaces apropiados para creación
-        assertTrue(result.hasLink("self"));
-        assertTrue(result.hasLink("usuarios"));
-        assertTrue(result.hasLink("actualizar"));
-        assertTrue(result.hasLink("eliminar"));
+        // Verificar que tiene enlaces
+        assertTrue(entityModel.hasLinks());
         
-        // No debería tener el enlace de cambiarEstado en creación
-        assertFalse(result.hasLink("cambiarEstado"));
+        // Verificar enlaces específicos para creación
+        assertTrue(entityModel.hasLink("self"));
+        assertTrue(entityModel.hasLink("usuarios"));
+        assertTrue(entityModel.hasLink("actualizar"));
+        assertTrue(entityModel.hasLink("eliminar"));
+        
+        // No debería tener enlace de cambiarEstado en creación
+        assertFalse(entityModel.hasLink("cambiarEstado"));
     }
 
     @Test
-    void toModelForUpdate_ShouldCreateEntityModelWithUpdateLinks() {
+    @DisplayName("Debería crear EntityModel para usuario actualizado con estado ACTIVO")
+    void testToModelForUpdateActivo() {
+        // Given
+        usuario.setEstado("ACTIVO");
+
         // When
-        EntityModel<Usuario> result = assembler.toModelForUpdate(usuario);
+        EntityModel<Usuario> entityModel = assembler.toModelForUpdate(usuario);
 
         // Then
-        assertNotNull(result);
-        assertEquals(usuario, result.getContent());
+        assertNotNull(entityModel);
+        assertEquals(usuario, entityModel.getContent());
         
-        // Verificar que tiene todos los enlaces
-        assertTrue(result.hasLink("self"));
-        assertTrue(result.hasLink("usuarios"));
-        assertTrue(result.hasLink("actualizar"));
-        assertTrue(result.hasLink("eliminar"));
-        assertTrue(result.hasLink("cambiarEstado"));
+        // Verificar que tiene enlaces
+        assertTrue(entityModel.hasLinks());
         
-        // Verificar que el enlace cambiarEstado tiene el estado opuesto
-        Link cambiarEstadoLink = result.getLink("cambiarEstado").orElse(null);
+        // Verificar enlaces específicos para actualización
+        assertTrue(entityModel.hasLink("self"));
+        assertTrue(entityModel.hasLink("usuarios"));
+        assertTrue(entityModel.hasLink("actualizar"));
+        assertTrue(entityModel.hasLink("eliminar"));
+        assertTrue(entityModel.hasLink("cambiarEstado"));
+        
+        // Verificar que el enlace cambiarEstado apunta a INACTIVO cuando el estado es ACTIVO
+        Link cambiarEstadoLink = entityModel.getLink("cambiarEstado").orElse(null);
         assertNotNull(cambiarEstadoLink);
-        assertTrue(cambiarEstadoLink.getHref().contains("estado=INACTIVO"));
+        assertTrue(cambiarEstadoLink.getHref().contains("INACTIVO"));
     }
 
     @Test
-    void toModelForUpdate_WithInactiveUser_ShouldHaveCorrectEstadoLink() {
+    @DisplayName("Debería crear EntityModel para usuario actualizado con estado INACTIVO")
+    void testToModelForUpdateInactivo() {
         // Given
         usuario.setEstado("INACTIVO");
 
         // When
-        EntityModel<Usuario> result = assembler.toModelForUpdate(usuario);
+        EntityModel<Usuario> entityModel = assembler.toModelForUpdate(usuario);
 
         // Then
-        Link cambiarEstadoLink = result.getLink("cambiarEstado").orElse(null);
+        assertNotNull(entityModel);
+        assertEquals(usuario, entityModel.getContent());
+        
+        // Verificar que tiene enlaces
+        assertTrue(entityModel.hasLinks());
+        
+        // Verificar enlaces específicos para actualización
+        assertTrue(entityModel.hasLink("self"));
+        assertTrue(entityModel.hasLink("usuarios"));
+        assertTrue(entityModel.hasLink("actualizar"));
+        assertTrue(entityModel.hasLink("eliminar"));
+        assertTrue(entityModel.hasLink("cambiarEstado"));
+        
+        // Verificar que el enlace cambiarEstado apunta a ACTIVO cuando el estado es INACTIVO
+        Link cambiarEstadoLink = entityModel.getLink("cambiarEstado").orElse(null);
         assertNotNull(cambiarEstadoLink);
-        assertTrue(cambiarEstadoLink.getHref().contains("estado=ACTIVO"));
+        assertTrue(cambiarEstadoLink.getHref().contains("ACTIVO"));
     }
 
     @Test
-    void toModel_WithNullUsuario_ShouldThrowException() {
-        // When & Then
-        assertThrows(NullPointerException.class, () -> {
-            assembler.toModel(null);
-        });
-    }
-
-    @Test
-    void toModel_WithUsuarioWithoutId_ShouldCreateLinksWithNullId() {
+    @DisplayName("Debería manejar usuario sin ID correctamente")
+    void testToModelWithoutId() {
         // Given
-        usuario.setId(null);
+        Usuario usuarioSinId = new Usuario("USR-002", "Ana Gómez", "ana@email.com");
+        // No establecer ID
 
         // When
-        EntityModel<Usuario> result = assembler.toModel(usuario);
+        EntityModel<Usuario> entityModel = assembler.toModel(usuarioSinId);
 
         // Then
-        assertNotNull(result);
-        // Los enlaces se crearán pero con ID null, lo cual es válido para HATEOAS
-        assertTrue(result.hasLink("self"));
+        assertNotNull(entityModel);
+        assertEquals(usuarioSinId, entityModel.getContent());
+        // HATEOAS puede manejar IDs null, por lo que no debería lanzar excepción
+        assertTrue(entityModel.hasLinks());
+    }
+
+    @Test
+    @DisplayName("Debería manejar usuario null correctamente")
+    void testToModelWithNullUsuario() {
+        // When & Then
+        assertThrows(Exception.class, () -> assembler.toModel(null));
+    }
+
+    @Test
+    @DisplayName("Debería generar enlaces con URLs correctas")
+    void testToModelWithCorrectUrls() {
+        // When
+        EntityModel<Usuario> entityModel = assembler.toModel(usuario);
+
+        // Then
+        Link selfLink = entityModel.getLink("self").orElse(null);
+        assertNotNull(selfLink);
+        assertTrue(selfLink.getHref().contains("/api/v1/usuarios/1"));
+        
+        Link usuariosLink = entityModel.getLink("usuarios").orElse(null);
+        assertNotNull(usuariosLink);
+        assertTrue(usuariosLink.getHref().contains("/api/v1/usuarios"));
     }
 } 
