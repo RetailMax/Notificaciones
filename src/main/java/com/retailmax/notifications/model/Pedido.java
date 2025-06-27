@@ -4,11 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pedidos")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pedido {
 
     @Id
@@ -23,12 +29,12 @@ public class Pedido {
 
     @NotNull(message = "La fecha del pedido es requerida")
     @Column(name = "fecha_pedido", nullable = false)
-    private LocalDateTime fechaPedido;
+    private LocalDateTime fechaPedido = LocalDateTime.now();
 
     @NotNull(message = "El estado del pedido es requerido")
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_pedido", nullable = false)
-    private EstadoPedido estadoPedido;
+    private EstadoPedido estadoPedido = EstadoPedido.ENVIADO;
 
     @NotNull(message = "El total es requerido")
     @DecimalMin(value = "0.01", message = "El total debe ser mayor a 0")
@@ -38,13 +44,12 @@ public class Pedido {
     @Column(name = "fecha_entrega_estimada")
     private LocalDateTime fechaEntregaEstimada;
 
-    // Constructor por defecto
-    public Pedido() {
-        this.fechaPedido = LocalDateTime.now();
-        this.estadoPedido = EstadoPedido.ENVIADO;
-    }
+    // Relación con Usuario
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
-    // Constructor con parámetros
+    // Constructor parcial requerido por los tests
     public Pedido(Long clienteId, BigDecimal total, LocalDateTime fechaEntregaEstimada) {
         this.clienteId = clienteId;
         this.total = total;
@@ -53,64 +58,5 @@ public class Pedido {
         this.estadoPedido = EstadoPedido.ENVIADO;
     }
 
-    // Getters y Setters
-    public Long getPedidoId() {
-        return pedidoId;
-    }
-
-    public void setPedidoId(Long pedidoId) {
-        this.pedidoId = pedidoId;
-    }
-
-    public Long getClienteId() {
-        return clienteId;
-    }
-
-    public void setClienteId(Long clienteId) {
-        this.clienteId = clienteId;
-    }
-
-    public LocalDateTime getFechaPedido() {
-        return fechaPedido;
-    }
-
-    public void setFechaPedido(LocalDateTime fechaPedido) {
-        this.fechaPedido = fechaPedido;
-    }
-
-    public EstadoPedido getEstadoPedido() {
-        return estadoPedido;
-    }
-
-    public void setEstadoPedido(EstadoPedido estadoPedido) {
-        this.estadoPedido = estadoPedido;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-    public LocalDateTime getFechaEntregaEstimada() {
-        return fechaEntregaEstimada;
-    }
-
-    public void setFechaEntregaEstimada(LocalDateTime fechaEntregaEstimada) {
-        this.fechaEntregaEstimada = fechaEntregaEstimada;
-    }
-
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "pedidoId=" + pedidoId +
-                ", clienteId=" + clienteId +
-                ", fechaPedido=" + fechaPedido +
-                ", estadoPedido=" + estadoPedido +
-                ", total=" + total +
-                ", fechaEntregaEstimada=" + fechaEntregaEstimada +
-                '}';
-    }
+    // Si tienes lógica personalizada, agrégala aquí
 }

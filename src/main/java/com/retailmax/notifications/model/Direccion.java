@@ -3,9 +3,15 @@ package com.retailmax.notifications.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "direccion")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Direccion {
 
     @Id
@@ -42,119 +48,5 @@ public class Direccion {
     @Size(max = 20, message = "El tipo de dirección no puede exceder 20 caracteres")
     private String tipoDireccion; // "ENTREGA", "FACTURACION", etc.
 
-    // Constructor por defecto
-    public Direccion() {
-    }
-
-    // Constructor con parámetros
-    public Direccion(Long id, String calle, String numero, String piso, String departamento, 
-                    String codigoPostal, String ciudad, String provincia, String pais, String tipoDireccion) {
-        this.id = id;
-        this.calle = calle;
-        this.numero = numero;
-        this.piso = piso;
-        this.departamento = departamento;
-        this.codigoPostal = codigoPostal;
-        this.ciudad = ciudad;
-        this.provincia = provincia;
-        this.pais = pais;
-        this.tipoDireccion = tipoDireccion;
-    }
-
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCalle() {
-        return calle;
-    }
-
-    public void setCalle(String calle) {
-        this.calle = calle;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getPiso() {
-        return piso;
-    }
-
-    public void setPiso(String piso) {
-        this.piso = piso;
-    }
-
-    public String getDepartamento() {
-        return departamento;
-    }
-
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
-    }
-
-    public String getCodigoPostal() {
-        return codigoPostal;
-    }
-
-    public void setCodigoPostal(String codigoPostal) {
-        this.codigoPostal = codigoPostal;
-    }
-
-    public String getCiudad() {
-        return ciudad;
-    }
-
-    public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
-    }
-
-    public String getPais() {
-        return pais;
-    }
-
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
-
-    public String getTipoDireccion() {
-        return tipoDireccion;
-    }
-
-    public void setTipoDireccion(String tipoDireccion) {
-        this.tipoDireccion = tipoDireccion;
-    }
-
-    @Override
-    public String toString() {
-        return "Direccion{" +
-                "id=" + id +
-                ", calle='" + calle + '\'' +
-                ", numero='" + numero + '\'' +
-                ", piso='" + piso + '\'' +
-                ", departamento='" + departamento + '\'' +
-                ", codigoPostal='" + codigoPostal + '\'' +
-                ", ciudad='" + ciudad + '\'' +
-                ", provincia='" + provincia + '\'' +
-                ", pais='" + pais + '\'' +
-                ", tipoDireccion='" + tipoDireccion + '\'' +
-                '}';
-    }
+    // Si tienes lógica personalizada, agrégala aquí
 } 

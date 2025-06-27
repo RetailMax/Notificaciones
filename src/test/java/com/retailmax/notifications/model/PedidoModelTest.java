@@ -93,4 +93,62 @@ public class PedidoModelTest {
         assertTrue(str.contains("clienteId"));
         assertTrue(str.contains("total"));
     }
+
+    @Test
+    void testConstructorPorDefectoYSettersYGetters() {
+        Pedido pedido = new Pedido();
+        pedido.setPedidoId(10L);
+        pedido.setClienteId(100L);
+        LocalDateTime fechaPedido = LocalDateTime.of(2024, 6, 26, 12, 0);
+        pedido.setFechaPedido(fechaPedido);
+        pedido.setEstadoPedido(EstadoPedido.ENTREGADO);
+        pedido.setTotal(new BigDecimal("123.45"));
+        LocalDateTime fechaEntrega = LocalDateTime.of(2024, 6, 27, 14, 0);
+        pedido.setFechaEntregaEstimada(fechaEntrega);
+
+        assertEquals(10L, pedido.getPedidoId());
+        assertEquals(100L, pedido.getClienteId());
+        assertEquals(fechaPedido, pedido.getFechaPedido());
+        assertEquals(EstadoPedido.ENTREGADO, pedido.getEstadoPedido());
+        assertEquals(new BigDecimal("123.45"), pedido.getTotal());
+        assertEquals(fechaEntrega, pedido.getFechaEntregaEstimada());
+    }
+
+   
+    @Test
+    void testRelacionConUsuario() {
+        Pedido pedido = new Pedido();
+        Usuario usuario = new Usuario();
+        usuario.setId(5L);
+        pedido.setUsuario(usuario);
+        assertEquals(usuario, pedido.getUsuario());
+    }
+
+    @Test
+    void testToString2() {
+        Pedido pedido = new Pedido();
+        pedido.setPedidoId(1L);
+        pedido.setClienteId(2L);
+        pedido.setFechaPedido(LocalDateTime.of(2024, 6, 26, 12, 0));
+        pedido.setEstadoPedido(EstadoPedido.EN_CAMINO);
+        pedido.setTotal(new BigDecimal("999.99"));
+        pedido.setFechaEntregaEstimada(LocalDateTime.of(2024, 6, 27, 14, 0));
+        Usuario usuario = new Usuario();
+        usuario.setId(7L);
+        pedido.setUsuario(usuario);
+        String str = pedido.toString();
+        assertTrue(str.contains("pedidoId=1"));
+        assertTrue(str.contains("clienteId=2"));
+        assertTrue(str.contains("estadoPedido=en camino") || str.contains("estadoPedido=EN_CAMINO") || str.contains("estadoPedido=EN CAMINO"));
+        assertTrue(str.contains("999.99"));
+        assertTrue(str.contains("usuario=Usuario") || str.contains("usuario=7") || str.contains("usuario="));
+    }
+
+    @Test
+    void testToStringSinUsuario() {
+        Pedido pedido = new Pedido();
+        pedido.setPedidoId(1L);
+        String str = pedido.toString();
+        assertTrue(str.contains("usuario=null"));
+    }
 }
