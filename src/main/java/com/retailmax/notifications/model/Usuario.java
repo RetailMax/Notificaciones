@@ -1,123 +1,70 @@
 package com.retailmax.notifications.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "usuario")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Schema(description = "Modelo de Usuario del sistema RetailMax")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID único del usuario", example = "1")
     private Long id;
 
-    @NotBlank(message = "El número de identificación es requerido")
-    @Size(min = 3, max = 20, message = "El número de identificación debe tener entre 3 y 20 caracteres")
+    @NotBlank(message = "El número de identificación es obligatorio")
+    @Size(min = 5, max = 20, message = "El número de identificación debe tener entre 5 y 20 caracteres")
+    @Column(name = "nro_id", unique = true, length = 20)
+    @Schema(description = "Número de identificación único del usuario", example = "12345678", required = true)
     private String nroId;
 
-    @NotBlank(message = "El nombre es requerido")
+    @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
+    @Column(length = 50)
+    @Schema(description = "Nombre completo del usuario", example = "Juan Pérez", required = true)
     private String nombre;
 
-    @NotBlank(message = "El apellido es requerido")
-    @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
-    private String apellido;
+    @NotBlank(message = "El correo electrónico es obligatorio")
+    @Email(message = "El formato del correo electrónico no es válido")
+    @Column(name = "correo_electronico", unique = true, length = 100)
+    @Schema(description = "Correo electrónico único del usuario", example = "juan.perez@email.com", required = true)
+    private String correoElectronico;
 
-    @NotBlank(message = "El email es requerido")
-    @Email(message = "El formato del email no es válido")
-    @Size(max = 100, message = "El email no puede exceder 100 caracteres")
-    private String email;
+    @Column(name = "estado", length = 20)
+    @Schema(description = "Estado del usuario en el sistema", example = "ACTIVO", allowableValues = {"ACTIVO", "INACTIVO"})
+    private String estado = "ACTIVO";  // Valor por defecto
 
-    @Size(max = 20, message = "El teléfono no puede exceder 20 caracteres")
-    private String telefono;
+    // Relación con Pedidos (un usuario puede tener múltiples pedidos)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Schema(description = "Lista de pedidos asociados al usuario", hidden = true)
+    private List<Pedido> pedidos = new ArrayList<>();
 
-    @Size(max = 20, message = "El estado no puede exceder 20 caracteres")
-    private String estado;
-
-    // Constructor por defecto
-    public Usuario() {
-    }
-
-    // Constructor con parámetros
-    public Usuario(Long id, String nroId, String nombre, String apellido, String email, String telefono, String estado) {
-        this.id = id;
+    // Constructor personalizado para campos obligatorios
+    public Usuario(String nroId, String nombre, String correoElectronico) {
         this.nroId = nroId;
         this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-        this.telefono = telefono;
-        this.estado = estado;
+        this.correoElectronico = correoElectronico;
     }
 
-    // Getters y Setters
-    public Long getId() {
-        return id;
+    // Método helper para agregar pedidos
+    public void addPedido(Pedido pedido) {
+        pedidos.add(pedido);
+        pedido.setUsuario(this);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Método helper para remover pedidos
+    public void removePedido(Pedido pedido) {
+        pedidos.remove(pedido);
+        pedido.setUsuario(null);
     }
-
-    public String getNroId() {
-        return nroId;
-    }
-
-    public void setNroId(String nroId) {
-        this.nroId = nroId;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nroId='" + nroId + '\'' +
-                ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", email='" + email + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", estado='" + estado + '\'' +
-                '}';
-    }
-} 
+}
