@@ -1,9 +1,10 @@
-package com.retailmax.notifications.service;
+package com.retailmax.notificaciones.service;
 
-import com.retailmax.notifications.model.Promocion;
-import com.retailmax.notifications.repository.PromocionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.retailmax.notificaciones.model.Promocion;
+import com.retailmax.notificaciones.repository.PromocionRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,5 +29,15 @@ public class PromocionService {
 
     public void eliminar(Long id) {
         promocionRepository.deleteById(id);
+    }
+
+    public List<Promocion> findAll() {
+    
+        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    }
+
+    public Promocion save(Promocion promocion) {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'save'");
     }
 }

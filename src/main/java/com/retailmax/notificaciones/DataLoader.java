@@ -1,4 +1,4 @@
-package com.retailmax.notifications;
+package com.retailmax.notificaciones;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -8,6 +8,9 @@ import com.retailmax.notifications.model.Pedido;
 import com.retailmax.notifications.model.Usuario;
 import com.retailmax.notifications.repository.PedidoRepository;
 import com.retailmax.notifications.repository.UsuarioRepository;
+
+import com.retailmax.notificaciones.model.Promocion;
+import com.retailmax.notificaciones.repository.PromocionRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

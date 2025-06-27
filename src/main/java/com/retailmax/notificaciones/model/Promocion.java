@@ -1,10 +1,15 @@
-package com.retailmax.notifications.model;
+package com.retailmax.notificaciones.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Promocion")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Promocion {
 
     @Id

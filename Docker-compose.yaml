@@ -18,7 +18,7 @@ services:
 
   ordenes:
     build:
-      context: ../Ordenes
+      context: ../Ordenespeeo
     ports:
       - "8083:8080"
     networks:
@@ -47,14 +47,6 @@ services:
       - "8086:8080"
     networks:
       - backend
-
-  #producto:
-  #  build:
-  #    context: ../Producto
-  #  ports:
-  #    - "8087:8080"
-  #  networks:
-  #    - backend
 
 networks:
   backend:

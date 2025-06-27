@@ -1,15 +1,17 @@
-package com.retailmax.notifications.controller;
+package com.retailmax.notificaciones.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.retailmax.notifications.assemblers.PromocionModelAssembler;
-import com.retailmax.notifications.model.Promocion;
-import com.retailmax.notifications.service.PromocionService;
+import com.retailmax.notificaciones.assemblers.PromocionModelAssembler;
+import com.retailmax.notificaciones.model.Promocion;
+import com.retailmax.notificaciones.service.PromocionService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +32,7 @@ public class PromocionControllerV2 {
     public CollectionModel<EntityModel<Promocion>> getAllPromociones() {
         List<EntityModel<Promocion>> promociones = promocionService.listarTodas().stream()
                 .map(assembler::toModel)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());//devuelve una lista de promociones
 
         return CollectionModel.of(promociones,
                 linkTo(methodOn(PromocionControllerV2.class).getAllPromociones()).withSelfRel());
@@ -39,8 +41,8 @@ public class PromocionControllerV2 {
     @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<Promocion> getPromocionById(@PathVariable Long id) {
         Promocion promocion = promocionService.buscarPorId(id)
-                .orElseThrow(() -> new RuntimeException("Promocion no encontrada"));
-        return assembler.toModel(promocion);
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Promocion no encontrada"));
+        return assembler.toModel(promocion);//Not found si no existe, responde con 404
     }
 
     @PostMapping(produces = MediaTypes.HAL_JSON_VALUE)
