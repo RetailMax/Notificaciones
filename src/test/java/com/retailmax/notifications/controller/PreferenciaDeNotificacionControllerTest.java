@@ -43,7 +43,7 @@ class PreferenciaDeNotificacionControllerTest {
             .andExpect(jsonPath("$._embedded.preferenciaDeNotificacionList[0]._links.self.href", containsString("/api/preferencias/1")))
             .andExpect(jsonPath("$._links.self.href", containsString("/api/preferencias/1")));
     }
-
+// testing
     @Test
     void updatePreferencias_llamaAlServicio() throws Exception {
         String body = "[{\"clienteId\":1,\"canalId\":1,\"habilitado\":true}]";
