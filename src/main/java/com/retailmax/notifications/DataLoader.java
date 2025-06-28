@@ -34,6 +34,9 @@ public class DataLoader implements CommandLineRunner {
     void setUsuarioRepository(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
+    void setPromocionRepository(PromocionRepository promocionRepository) {
+        this.promocionRepository = promocionRepository;
+    }
 
     @Override
     public void run(String... args) throws Exception {

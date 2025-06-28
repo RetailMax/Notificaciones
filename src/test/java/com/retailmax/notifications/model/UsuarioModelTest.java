@@ -67,9 +67,14 @@ public class UsuarioModelTest {
     @DisplayName("Debería tener toString, equals y hashCode funcionales")
     void testToStringEqualsHashCode() {
         Usuario usuario1 = new Usuario("USR-002", "Ana Gómez", "ana@email.com");
-        Usuario usuario2 = new Usuario("USR-002", "Ana Gómez", "ana@email.com");
+        Usuario usuario2 = new Usuario("USR-003", "Carlos López", "carlos@email.com");
         assertNotNull(usuario1.toString());
-        assertNotEquals(usuario1, usuario2); // Diferentes instancias
+        assertNotEquals(usuario1, usuario2); // Diferentes números de ID
         assertNotEquals(usuario1.hashCode(), usuario2.hashCode());
+        
+        // Usuarios con el mismo número de ID deberían ser iguales
+        Usuario usuario3 = new Usuario("USR-002", "Ana Gómez", "ana@email.com");
+        assertEquals(usuario1, usuario3);
+        assertEquals(usuario1.hashCode(), usuario3.hashCode());
     }
 }

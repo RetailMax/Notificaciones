@@ -1,4 +1,3 @@
-
 package com.retailmax.notifications;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +11,7 @@ class NotificationsApplicationsTests {
 
 	@Test
 	void testMain() {
-		NotificationsApplication.main(new String[]{});
+		NotificacionesApplication.main(new String[]{});
 	}
 
 }
