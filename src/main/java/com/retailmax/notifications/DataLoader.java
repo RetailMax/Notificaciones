@@ -84,5 +84,6 @@ public class DataLoader implements CommandLineRunner {
             promocion.setFechaEnvio(LocalDateTime.now().minusDays(random.nextInt(30)));
             promocion.setResultadoEnvio(random.nextBoolean() ? "Enviado" : "Fallido");
             promocionRepository.save(promocion);
+        }
     }
 }
