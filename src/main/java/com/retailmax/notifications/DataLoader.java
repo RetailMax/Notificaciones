@@ -24,6 +24,8 @@ public class DataLoader implements CommandLineRunner {
     private PedidoRepository pedidoRepository;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PromocionRepository promocionRepository;
 
     // Métodos para inyección en pruebas
     void setPedidoRepository(PedidoRepository pedidoRepository) {
@@ -74,8 +76,6 @@ public class DataLoader implements CommandLineRunner {
         } else {
             System.out.println("ℹ️ Los datos ya existen en la base de datos. Saltando carga de datos de ejemplo.");
         }
-
-        Random random = new Random();
 
         // Generar 10 promociones de ejemplo
         for (int i = 0; i < 10; i++) {
