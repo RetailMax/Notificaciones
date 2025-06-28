@@ -1,4 +1,4 @@
-package com.retailmax.notificaciones.repository;
+package com.retailmax.notifications.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

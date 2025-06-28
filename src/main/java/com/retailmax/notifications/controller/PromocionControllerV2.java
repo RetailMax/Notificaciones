@@ -1,4 +1,4 @@
-package com.retailmax.notificaciones.controller;
+package com.retailmax.notifications.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;

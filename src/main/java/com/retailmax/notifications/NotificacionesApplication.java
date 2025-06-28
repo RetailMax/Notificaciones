@@ -1,4 +1,4 @@
-package com.retailmax.notificaciones;
+package com.retailmax.notifications;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

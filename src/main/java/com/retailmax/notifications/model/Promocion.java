@@ -1,4 +1,4 @@
-package com.retailmax.notificaciones.model;
+package com.retailmax.notifications.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

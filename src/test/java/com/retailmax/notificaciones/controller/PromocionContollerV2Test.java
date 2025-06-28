@@ -1,4 +1,4 @@
-package com.retailmax.notificaciones.controller;
+package com.retailmax.notifications.controller;
 
 import com.retailmax.notificaciones.assemblers.PromocionModelAssembler;
 import com.retailmax.notificaciones.model.Promocion;

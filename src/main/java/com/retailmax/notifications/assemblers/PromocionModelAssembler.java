@@ -1,4 +1,4 @@
-package com.retailmax.notificaciones.assemblers;
+package com.retailmax.notifications.assemblers;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 

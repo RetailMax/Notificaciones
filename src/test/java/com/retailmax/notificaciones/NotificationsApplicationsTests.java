@@ -1,5 +1,5 @@
 
-package com.retailmax.notificaciones;
+package com.retailmax.notifications;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

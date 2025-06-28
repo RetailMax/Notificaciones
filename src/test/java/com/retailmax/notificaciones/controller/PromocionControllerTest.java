@@ -1,4 +1,4 @@
-package com.retailmax.notificaciones.controller;
+package com.retailmax.notifications.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
