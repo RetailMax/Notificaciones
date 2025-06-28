@@ -2,8 +2,10 @@ package com.retailmax.notifications;
 
 import com.retailmax.notifications.model.Pedido;
 import com.retailmax.notifications.model.Usuario;
+import com.retailmax.notifications.model.Promocion;
 import com.retailmax.notifications.repository.PedidoRepository;
 import com.retailmax.notifications.repository.UsuarioRepository;
+import com.retailmax.notifications.repository.PromocionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,8 @@ public class DataLoaderTest {
     private PedidoRepository pedidoRepository;
     @Mock
     private UsuarioRepository usuarioRepository;
+    @Mock
+    private PromocionRepository promocionRepository;
     @InjectMocks
     private DataLoader dataLoader;
 
@@ -29,6 +33,7 @@ public class DataLoaderTest {
         dataLoader = new DataLoader();
         dataLoader.setPedidoRepository(pedidoRepository);
         dataLoader.setUsuarioRepository(usuarioRepository);
+        dataLoader.setPromocionRepository(promocionRepository);
     }
 
     @Test
@@ -38,6 +43,9 @@ public class DataLoaderTest {
         when(usuarioRepository.findByNroId(anyString())).thenReturn(Optional.empty());
         when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(pedidoRepository.save(any(Pedido.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(promocionRepository.save(any(Promocion.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(pedidoRepository.count()).thenReturn(0L);
+        when(pedidoRepository.findAll()).thenReturn(java.util.Collections.emptyList());
 
         dataLoader.run();
 
@@ -45,6 +53,8 @@ public class DataLoaderTest {
         verify(usuarioRepository, atLeastOnce()).save(any(Usuario.class));
         // Verificar que se intentó guardar pedidos
         verify(pedidoRepository, atLeastOnce()).save(any(Pedido.class));
+        // Verificar que se intentó guardar promociones
+        verify(promocionRepository, atLeastOnce()).save(any(Promocion.class));
     }
 
     @Test
@@ -53,6 +63,9 @@ public class DataLoaderTest {
         Usuario usuario = new Usuario();
         when(usuarioRepository.findByNroId(anyString())).thenReturn(Optional.of(usuario));
         when(pedidoRepository.save(any(Pedido.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(promocionRepository.save(any(Promocion.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(pedidoRepository.count()).thenReturn(0L);
+        when(pedidoRepository.findAll()).thenReturn(java.util.Collections.emptyList());
 
         dataLoader.run();
 
@@ -60,5 +73,7 @@ public class DataLoaderTest {
         verify(usuarioRepository, never()).save(any(Usuario.class));
         // Pero sí debe guardar pedidos
         verify(pedidoRepository, atLeastOnce()).save(any(Pedido.class));
+        // Y promociones
+        verify(promocionRepository, atLeastOnce()).save(any(Promocion.class));
     }
 } 

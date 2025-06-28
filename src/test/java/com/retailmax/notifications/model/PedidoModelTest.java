@@ -44,10 +44,14 @@ public class PedidoModelTest {
         Pedido pedidoInvalido = new Pedido();
         Set<ConstraintViolation<Pedido>> violations = validator.validate(pedidoInvalido);
         assertFalse(violations.isEmpty());
+        
+        // Verificar que hay violaciones para los campos obligatorios
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("codigoId")));
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("fechaPedido")));
-        assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("estadoPedido")));
         assertTrue(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("montoTotal")));
+        
+        // Verificar que no hay violaciones para campos con valores por defecto
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("fechaPedido")));
+        assertFalse(violations.stream().anyMatch(v -> v.getPropertyPath().toString().equals("estadoPedido")));
     }
 
     @Test
@@ -78,10 +82,36 @@ public class PedidoModelTest {
     @Test
     @DisplayName("Debería tener toString, equals y hashCode funcionales")
     void testToStringEqualsHashCode() {
-        Pedido pedido1 = new Pedido("PED-003", new BigDecimal("300.00"), LocalDateTime.now());
-        Pedido pedido2 = new Pedido("PED-003", new BigDecimal("300.00"), LocalDateTime.now());
+        LocalDateTime fechaFija = LocalDateTime.of(2024, 6, 26, 12, 0);
+        
+        // Crear pedidos usando el constructor por defecto para evitar fechas automáticas
+        Pedido pedido1 = new Pedido();
+        pedido1.setCodigoId("PED-003");
+        pedido1.setMontoTotal(new BigDecimal("300.00"));
+        pedido1.setFechaPedido(fechaFija);
+        pedido1.setFechaEntrega(fechaFija);
+        pedido1.setEstadoPedido(Pedido.EstadoPedido.ENVIADO);
+        
+        Pedido pedido2 = new Pedido();
+        pedido2.setCodigoId("PED-004");
+        pedido2.setMontoTotal(new BigDecimal("400.00"));
+        pedido2.setFechaPedido(fechaFija);
+        pedido2.setFechaEntrega(fechaFija);
+        pedido2.setEstadoPedido(Pedido.EstadoPedido.ENVIADO);
+        
         assertNotNull(pedido1.toString());
-        assertNotEquals(pedido1, pedido2); // Diferentes instancias
+        assertNotEquals(pedido1, pedido2); // Diferentes códigos de ID
         assertNotEquals(pedido1.hashCode(), pedido2.hashCode());
+        
+        // Pedidos con el mismo código deberían ser iguales
+        Pedido pedido3 = new Pedido();
+        pedido3.setCodigoId("PED-003");
+        pedido3.setMontoTotal(new BigDecimal("300.00"));
+        pedido3.setFechaPedido(fechaFija);
+        pedido3.setFechaEntrega(fechaFija);
+        pedido3.setEstadoPedido(Pedido.EstadoPedido.ENVIADO);
+        
+        assertEquals(pedido1, pedido3);
+        assertEquals(pedido1.hashCode(), pedido3.hashCode());
     }
 }

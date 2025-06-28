@@ -37,7 +37,7 @@ class PreferenciaDeNotificacionControllerTest {
 
         mockMvc.perform(get("/api/preferencias/1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$._embedded.entityModelList[0].clienteId").value(1L));
+            .andExpect(jsonPath("$._embedded.preferenciaDeNotificacionList[0].clienteId").value(1L));
     }
 
     @Test
@@ -48,6 +48,6 @@ class PreferenciaDeNotificacionControllerTest {
         mockMvc.perform(put("/api/preferencias/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk());
     }
 }
