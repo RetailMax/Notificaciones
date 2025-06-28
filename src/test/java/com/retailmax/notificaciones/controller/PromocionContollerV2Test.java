@@ -1,8 +1,8 @@
 package com.retailmax.notifications.controller;
 
-import com.retailmax.notificaciones.assemblers.PromocionModelAssembler;
-import com.retailmax.notificaciones.model.Promocion;
-import com.retailmax.notificaciones.service.PromocionService;
+import com.retailmax.notifications.assemblers.PromocionModelAssembler;
+import com.retailmax.notifications.model.Promocion;
+import com.retailmax.notifications.service.PromocionService;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;

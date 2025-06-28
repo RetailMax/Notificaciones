@@ -3,8 +3,8 @@ package com.retailmax.notifications.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.retailmax.notificaciones.model.Promocion;
-import com.retailmax.notificaciones.repository.PromocionRepository;
+import com.retailmax.notifications.model.Promocion;
+import com.retailmax.notifications.repository.PromocionRepository;
 
 import java.util.List;
 import java.util.Optional;

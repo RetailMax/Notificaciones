@@ -5,8 +5,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.retailmax.notificaciones.model.Promocion;
-import com.retailmax.notificaciones.repository.PromocionRepository;
+import com.retailmax.notifications.model.Promocion;
+import com.retailmax.notifications.repository.PromocionRepository;
 
 
 import java.time.LocalDateTime;

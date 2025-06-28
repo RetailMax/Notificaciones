@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.retailmax.notificaciones.model.Promocion;
-import com.retailmax.notificaciones.service.PromocionService;
+import com.retailmax.notifications.model.Promocion;
+import com.retailmax.notifications.service.PromocionService;
 
 import java.util.List;
 

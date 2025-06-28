@@ -7,8 +7,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import com.retailmax.notificaciones.controller.PromocionControllerV2;
-import com.retailmax.notificaciones.model.Promocion;
+import com.retailmax.notifications.controller.PromocionControllerV2;
+import com.retailmax.notifications.model.Promocion;
 
 @Component
 public class PromocionModelAssembler implements RepresentationModelAssembler<Promocion, EntityModel<Promocion>> {

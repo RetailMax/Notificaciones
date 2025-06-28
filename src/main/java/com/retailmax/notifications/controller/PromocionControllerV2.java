@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.retailmax.notificaciones.assemblers.PromocionModelAssembler;
-import com.retailmax.notificaciones.model.Promocion;
-import com.retailmax.notificaciones.service.PromocionService;
+import com.retailmax.notifications.assemblers.PromocionModelAssembler;
+import com.retailmax.notifications.model.Promocion;
+import com.retailmax.notifications.service.PromocionService;
 
 import java.util.List;
 import java.util.stream.Collectors;

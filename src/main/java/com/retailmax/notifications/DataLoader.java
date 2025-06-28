@@ -9,8 +9,8 @@ import com.retailmax.notifications.model.Usuario;
 import com.retailmax.notifications.repository.PedidoRepository;
 import com.retailmax.notifications.repository.UsuarioRepository;
 
-import com.retailmax.notificaciones.model.Promocion;
-import com.retailmax.notificaciones.repository.PromocionRepository;
+import com.retailmax.notifications.model.Promocion;
+import com.retailmax.notifications.repository.PromocionRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
