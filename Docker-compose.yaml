@@ -48,14 +48,6 @@ services:
     networks:
       - backend
 
-  #producto:
-  #  build:
-  #    context: ../Producto
-  #  ports:
-  #    - "8087:8080"
-  #  networks:
-  #    - backend
-
 networks:
   backend:
     driver: bridge

@@ -9,6 +9,9 @@ import com.retailmax.notifications.model.Usuario;
 import com.retailmax.notifications.repository.PedidoRepository;
 import com.retailmax.notifications.repository.UsuarioRepository;
 
+import com.retailmax.notifications.model.Promocion;
+import com.retailmax.notifications.repository.PromocionRepository;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -70,6 +73,17 @@ public class DataLoader implements CommandLineRunner {
             System.out.println("✅ Datos de pedidos y usuario de ejemplo cargados exitosamente en modo desarrollo");
         } else {
             System.out.println("ℹ️ Los datos ya existen en la base de datos. Saltando carga de datos de ejemplo.");
+        }
+
+        Random random = new Random();
+
+        // Generar 10 promociones de ejemplo
+        for (int i = 0; i < 10; i++) {
+            Promocion promocion = new Promocion();
+            promocion.setTipo("gmail");
+            promocion.setFechaEnvio(LocalDateTime.now().minusDays(random.nextInt(30)));
+            promocion.setResultadoEnvio(random.nextBoolean() ? "Enviado" : "Fallido");
+            promocionRepository.save(promocion);
         }
     }
 }
